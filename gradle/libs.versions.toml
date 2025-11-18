@@ -22,7 +22,6 @@ navigationCompose = "2.9.6"
 room = "2.8.3"
 roomPaging = "2.8.3"
 lifecycle = "2.9.4"
-foundation = "1.9.4"
 navigation3Runtime = "1.0.0-rc01"
 pagingCommon = "3.3.6"
 workRuntimeKtx = "2.11.0"
@@ -89,7 +88,6 @@ androidx-test-runner = { module = "androidx.test:runner", version.ref = "android
 test-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 work-testing = { module = "androidx.work:work-testing", version.ref = "work-test" }
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycle" }
-androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 
 
 [plugins]

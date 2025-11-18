@@ -76,7 +76,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.process)
-    implementation(libs.androidx.foundation)
     implementation(libs.androidx.paging.compose)
     implementation(libs.accompanist.permissions)
     implementation(libs.coil.compose)
