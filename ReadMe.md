@@ -47,7 +47,7 @@ The app follows the principles of Clean Architecture, separating concerns into t
 *   The app assumes that the user has granted the necessary permissions to access the camera and storage.
 *   The app does not include any cloud storage functionality or server side functionality.
 *   The app has to be run on a real Android device to use the camera. But there is a fallback for emulator usage.
-
+*   The app does currently not allow the deletion of exercises
 
 ## Approximate Time Spent
 
