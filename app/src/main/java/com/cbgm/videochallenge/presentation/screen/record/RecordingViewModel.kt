@@ -13,7 +13,7 @@ class RecordingViewModel(
     val addUseCase: AddRecordedExerciseUseCase
 ) : ViewModel() {
 
-    fun saveRecorded(uri: Uri) {
+    fun saveRecorded(uri: Uri?) {
         viewModelScope.launch {
             addUseCase.invoke(uri)
         }

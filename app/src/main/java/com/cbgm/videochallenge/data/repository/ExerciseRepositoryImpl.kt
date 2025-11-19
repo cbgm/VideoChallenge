@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.util.UUID
 
 class ExerciseRepositoryImpl(
     private val context: Context,
@@ -41,21 +43,18 @@ class ExerciseRepositoryImpl(
     override fun observe(id: Long): Flow<Exercise> =
         dao.observeExercise(id).map { entity -> entity.toDomain() }
 
-    override suspend fun addExercise(uri: Uri): Boolean = withContext(Dispatchers.IO) {
-        val file = videoUtil.copyUriToFile(uri)
-        if (file != null) {
-            val thumb = videoUtil.generateThumbnail(file)
-            val ex = Exercise(
-                uri = file.toURI().toString(),
-                filename = file.name,
+    override suspend fun addExercise(uri: Uri?): Boolean = withContext(Dispatchers.IO) {
+        val (savedUri, filename, thumbPath) = saveToLocalStorage(uri) ?: return@withContext false
+        dao.insert(
+            Exercise(
+                uri = savedUri,
+                filename = filename,
                 timestamp = System.currentTimeMillis(),
                 status = ExerciseStatus.RECORDED,
-                thumbnailPath = thumb
-            )
-            dao.insert(ex.toEntity())
-            return@withContext true
-        }
-        return@withContext false
+                thumbnailPath = thumbPath
+            ).toEntity()
+        )
+        return@withContext true
     }
 
     override suspend fun uploadExercise(id: Long) {
@@ -71,5 +70,34 @@ class ExerciseRepositoryImpl(
             .mapNotNull { list ->
                 list.firstOrNull()?.progress?.getInt("progress", -1)?.takeIf { it >= 0 }
             }.flowOn(Dispatchers.IO)
+
+    private fun saveToLocalStorage(uri: Uri?): Triple<String, String, String>? {
+        val (fileForThumb, savedUri, filename) = if (uri != null) {
+            val file = videoUtil.copyUriToFile(uri)
+                ?: return saveToLocalStorage(null)
+
+            Triple(file, file.toURI().toString(), file.name)
+
+        } else {
+            val input = context.assets.open("sample-2.mp4")
+            val temp = File.createTempFile(
+                "thumb_asset_${UUID.randomUUID()}",
+                ".mp4",
+                context.cacheDir
+            ).apply {
+                outputStream().use { out -> input.copyTo(out) }
+            }
+
+            Triple(temp, "", "sample-2.mp4")
+        }
+
+        val thumbPath = videoUtil.generateThumbnail(fileForThumb)
+
+        if (uri == null) fileForThumb.delete()
+        if (thumbPath == null) return null
+
+        return Triple(savedUri, filename, thumbPath)
+    }
+
 
 }

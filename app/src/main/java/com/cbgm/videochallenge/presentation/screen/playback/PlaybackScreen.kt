@@ -1,5 +1,6 @@
 package com.cbgm.videochallenge.presentation.screen.playback
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -107,9 +108,16 @@ private fun PlaybackScreen(state: PlaybackScreenState, onUpload: () -> Unit, onB
 @Composable
 private fun VideoPlayer(uri: String) {
     val context = LocalContext.current
+    val mediaItem = remember(uri) {
+        if (uri.isNotEmpty()) {
+            MediaItem.fromUri(uri)
+        } else {
+            MediaItem.fromUri(Uri.parse("asset:///sample-2.mp4"))
+        }
+    }
     val player = remember {
         ExoPlayer.Builder(context).build().apply {
-            setMediaItem(MediaItem.fromUri(uri))
+            setMediaItem(mediaItem)
             prepare()
             playWhenReady = false
         }
