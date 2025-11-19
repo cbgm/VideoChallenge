@@ -108,21 +108,20 @@ private fun PlaybackScreen(state: PlaybackScreenState, onUpload: () -> Unit, onB
 @Composable
 private fun VideoPlayer(uri: String) {
     val context = LocalContext.current
-    val mediaItem = remember(uri) {
-        if (uri.isNotEmpty()) {
-            MediaItem.fromUri(uri)
-        } else {
-            MediaItem.fromUri(Uri.parse("asset:///sample-2.mp4"))
-        }
+    val player = remember { ExoPlayer.Builder(context).build() }
+
+    LaunchedEffect(uri) {
+        player.setMediaItem(
+            if (uri.isNotEmpty()) MediaItem.fromUri(uri)
+            else MediaItem.fromUri(Uri.parse("asset:///sample-2.mp4"))
+        )
+        player.prepare()
+        player.playWhenReady = false
     }
-    val player = remember {
-        ExoPlayer.Builder(context).build().apply {
-            setMediaItem(mediaItem)
-            prepare()
-            playWhenReady = false
-        }
+
+    DisposableEffect(Unit) {
+        onDispose { player.release() }
     }
-    DisposableEffect(Unit) { onDispose { player.release() } }
 
     AndroidView(
         factory = { ctx -> PlayerView(ctx).apply { this.player = player; useController = true } },
