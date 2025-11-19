@@ -35,8 +35,7 @@ The app follows the principles of Clean Architecture, separating concerns into t
 * **Koin:** This dependency injection framework was chosen for its simplicity and ease of use.
 * **Room:** This persistence library was used to store data locally, providing a robust and
   efficient way to manage data.
-* **CameraX:** This library was used to simplify camera development, providing a consistent and
-  easy-to-use API for camera-related tasks.
+* **Camera Intent:** This Intent was used to simplify camera development instead the more complex CameraX.
 * **ExoPlayer:** This media player was used to provide a flexible and extensible way to play videos.
 * **WorkManager:** This library is used for scheduling and executing background tasks, such as
   uploading videos. It ensures that the upload process continues even if the app is in the
@@ -48,7 +47,7 @@ The app follows the principles of Clean Architecture, separating concerns into t
 * **Architecture:** Clean Architecture, MVVM
 * **Dependency Injection:** Koin
 * **Navigation:** Jetpack Navigation
-* **Camera:** CameraX
+* **Camera:** Camera Intent
 * **Database:** Room
 * **Video Playback:** ExoPlayer
 * **Asynchronous Programming:** Kotlin Coroutines
